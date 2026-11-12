@@ -65,6 +65,26 @@ def test_win_set():
     assert s.winner is None
 
 
+def test_6_5_set():
+    raw_points = game(0) * 5 + game(1) * 5 + game(0)
+
+    s = calculate_score(raw_points)
+
+    assert s.sets == ()
+    assert s.games == (6, 5)
+    assert s.points == (0, 0)
+    assert not s.in_tiebreak
+    assert s.winner is None
+
+    raw_points.extend(game(0))  # Player 1 wins the next game, set should be over
+    s = calculate_score(raw_points)
+    assert s.sets == ((7, 5),)
+    assert s.games == (0, 0)
+    assert s.points == (0, 0)
+    assert not s.in_tiebreak
+    assert s.winner is None
+
+
 def test_deuce_and_adv():
     raw_points = [0, 1, 0, 1, 0, 1]  # 40-40
     s = calculate_score(raw_points)

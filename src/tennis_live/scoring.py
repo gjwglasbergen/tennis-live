@@ -79,6 +79,8 @@ def calculate_score(points: list[int], config: MatchConfig = MatchConfig()) -> S
             if set_winner is not None:
                 sets_in_match.append(tuple(games_in_set))
                 games_in_set = [0, 0]  # Reset games for the next set
+    # TODO : Implement tiebreak logic and match winner logic
+    # TODO : Implement logic for final set super tiebreak if config.final_set_super_tiebreak is True
 
     return Score(
         sets=tuple(sets_in_match),
@@ -107,6 +109,5 @@ def display_points(score: Score) -> (str, str):
             return "Advantage", "40"
         else:
             return "40", "Advantage"
-
 
     return mapper.get(p0_points, "0"), mapper.get(p1_points, "0")
