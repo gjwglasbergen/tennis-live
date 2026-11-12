@@ -22,30 +22,37 @@ class Score:
     winner: int | None = None  # 0 for player0, 1 for player1, None if match is ongoing
 
 
-def update_points(points_in_game: list[int], point_winner: int) -> None:
-    """Updates the points in the current game based on the point winner.
+def check_game_update(points_in_game: list[int]) -> int | None:
+    """Checks if a player has won the game based on the current points.
 
     Args:
         points_in_game (list[int]): Current points in the game for both players.
-        point_winner (int): The player who won the point (0 or 1).
+
+    Returns:
+        int | None: The player who won the game (0 or 1), or None if no one has won yet.
     """
-    if point_winner not in (0, 1):
-        raise ValueError(f"Invalid point winner: {point_winner}. Must be 0 or 1.")
+    if points_in_game[0] >= 4 and points_in_game[0] - points_in_game[1] >= 2:
+        return 0
+    elif points_in_game[1] >= 4 and points_in_game[1] - points_in_game[0] >= 2:
+        return 1
+    return None
 
-    points_in_game[point_winner] += 1
 
-
-def update_games(games_in_set: list[int], game_winner: int) -> None:
-    """Updates the games in the current set based on the game winner.
+def check_set_update(games_in_set: list[int], config: MatchConfig) -> int | None:
+    """Checks if a player has won the set based on the current games.
 
     Args:
         games_in_set (list[int]): Current games in the set for both players.
-        game_winner (int): The player who won the game (0 or 1).
-    """
-    if game_winner not in (0, 1):
-        raise ValueError(f"Invalid game winner: {game_winner}. Must be 0 or 1.")
+        config (MatchConfig): Configuration for the match.
 
-    games_in_set[game_winner] += 1
+    Returns:
+        int | None: The player who won the set (0 or 1), or None if no one has won yet.
+    """
+    if games_in_set[0] >= 6 and games_in_set[0] - games_in_set[1] >= 2:
+        return 0
+    elif games_in_set[1] >= 6 and games_in_set[1] - games_in_set[0] >= 2:
+        return 1
+    return None
 
 
 def calculate_score(points: list[int], config: MatchConfig = MatchConfig()) -> Score:
@@ -54,23 +61,27 @@ def calculate_score(points: list[int], config: MatchConfig = MatchConfig()) -> S
     Args:
         points (list[int]): A list of integers representing the points scored by both players.
         config (MatchConfig): Configuration for the match."""
-
+    sets_in_match = []
     points_in_game = [0, 0]  # Points in the current game for player 0 and player 1
     games_in_set = [0, 0]  # Games won in the current set for player 0 and player 1
     for point in points:
         if point not in (0, 1):
             raise ValueError(f"Invalid point value: {point}. Must be 0 or 1.")
 
-        update_points(points_in_game, point)
-        if points_in_game[0] >= 4 and points_in_game[0] - points_in_game[1] >= 2:
-            update_games(games_in_set, 0)
-            points_in_game = [0, 0]  # Reset points for the next game
-        elif points_in_game[1] >= 4 and points_in_game[1] - points_in_game[0] >= 2:
-            update_games(games_in_set, 1)
+        points_in_game[point] += 1
+        game_winner = check_game_update(points_in_game)
+
+        if game_winner is not None:
+            games_in_set[game_winner] += 1
             points_in_game = [0, 0]  # Reset points for the next game
 
+            set_winner = check_set_update(games_in_set, config)
+            if set_winner is not None:
+                sets_in_match.append(tuple(games_in_set))
+                games_in_set = [0, 0]  # Reset games for the next set
+
     return Score(
-        sets=(),
+        sets=tuple(sets_in_match),
         games=tuple(games_in_set),
         points=tuple(points_in_game),
         in_tiebreak=False,
