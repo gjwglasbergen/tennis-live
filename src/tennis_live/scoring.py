@@ -89,7 +89,7 @@ def calculate_score(points: list[int], config: MatchConfig = MatchConfig()) -> S
     )
 
 
-def display_points(score: Score) -> str:
+def display_points(score: Score) -> (str, str):
     """Returns a string representation of the current point score.
 
     Args:
@@ -98,4 +98,15 @@ def display_points(score: Score) -> str:
     Returns:
         str: A string representing the current point score.
     """
-    raise NotImplementedError("Display points logic is not implemented yet.")
+    mapper = {0: "0", 1: "15", 2: "30", 3: "40"}
+    p0_points, p1_points = score.points
+    if p0_points >= 3 and p1_points >= 3:
+        if p0_points == p1_points:
+            return "Deuce", "Deuce"
+        elif p0_points > p1_points:
+            return "Advantage", "40"
+        else:
+            return "40", "Advantage"
+
+
+    return mapper.get(p0_points, "0"), mapper.get(p1_points, "0")

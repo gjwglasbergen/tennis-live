@@ -1,4 +1,4 @@
-from tennis_live.scoring import calculate_score
+from tennis_live.scoring import calculate_score, display_points
 
 
 def game(player: int) -> list[int]:
@@ -30,7 +30,7 @@ def test_first_point_player1():
     assert not s.in_tiebreak
     assert s.winner is None
 
-    # assert display_points(s) == ("15", "0")
+    assert display_points(s) == ("15", "0")
 
 
 def test_first_point_player2():
@@ -42,7 +42,7 @@ def test_first_point_player2():
     assert not s.in_tiebreak
     assert s.winner is None
 
-    # assert display_points(s) == ("0", "15")
+    assert display_points(s) == ("0", "15")
 
 
 def test_win_game():
@@ -69,12 +69,12 @@ def test_deuce_and_adv():
     raw_points = [0, 1, 0, 1, 0, 1]  # 40-40
     s = calculate_score(raw_points)
     assert s.points == (3, 3)
-    # assert display_points(s) == ("Deuce", "Deuce")
+    assert display_points(s) == ("Deuce", "Deuce")
 
     raw_points.append(0)  # Player 1 advantage
     s = calculate_score(raw_points)
     assert s.points == (4, 3)
-    # assert display_points(s) == ("Advantage", "40")
+    assert display_points(s) == ("Advantage", "40")
 
     raw_points.append(1)  # Back to deuce
     s = calculate_score(raw_points)
@@ -83,7 +83,7 @@ def test_deuce_and_adv():
     raw_points.append(1)  # Player 2 advantage
     s = calculate_score(raw_points)
     assert s.points == (4, 5)
-    # assert display_points(s) == ("40", "Advantage")
+    assert display_points(s) == ("40", "Advantage")
 
     raw_points.append(1)  # Player 2 wins game
     s = calculate_score(raw_points)
