@@ -1,2 +1,2 @@
-def main() -> None:
-    print("Hello from tennis-live!")
+def main():
+    print("Welcome to the Tennis Live Scoring System!")
