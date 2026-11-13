@@ -55,6 +55,18 @@ def check_set_update(games_in_set: list[int], config: MatchConfig) -> int | None
     return None
 
 
+def check_is_tiebreak(games_in_set: list[int]) -> bool:
+    """Checks if the current game is a tiebreak based on the current games.
+
+    Args:
+        games_in_set (list[int]): Current games in the set for both players.
+
+    Returns:
+        bool: True if the current game is a tiebreak, False otherwise.
+    """
+    return games_in_set[0] == 6 and games_in_set[1] == 6
+
+
 def calculate_score(points: list[int], config: MatchConfig = MatchConfig()) -> Score:
     """Calculates the score of a tennis match based on the points scored by each player.
 
@@ -86,7 +98,7 @@ def calculate_score(points: list[int], config: MatchConfig = MatchConfig()) -> S
         sets=tuple(sets_in_match),
         games=tuple(games_in_set),
         points=tuple(points_in_game),
-        in_tiebreak=False,
+        in_tiebreak=check_is_tiebreak(games_in_set),
         winner=None,
     )
 

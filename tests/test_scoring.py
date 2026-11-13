@@ -109,3 +109,12 @@ def test_deuce_and_adv():
     s = calculate_score(raw_points)
     assert s.games == (0, 1)
     assert s.points == (0, 0)
+
+
+def test_tiebreak():
+    raw_points = game(0) * 5 + game(1) * 6 + game(0)
+    s = calculate_score(raw_points)
+    assert s.sets == ()
+    assert s.games == (6, 6)
+    assert s.points == (0, 0)
+    assert s.in_tiebreak
