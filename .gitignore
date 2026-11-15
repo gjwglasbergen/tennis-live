@@ -11,3 +11,4 @@ wheels/
 
 # Pytest
 .coverage
+.coverage
