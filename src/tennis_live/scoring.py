@@ -76,11 +76,13 @@ def calculate_score(points: list[int], config: MatchConfig = MatchConfig()) -> S
     sets_in_match = []
     points_in_game = [0, 0]  # Points in the current game for player 0 and player 1
     games_in_set = [0, 0]  # Games won in the current set for player 0 and player 1
+    tiebreak = check_is_tiebreak(games_in_set)
     for point in points:
         if point not in (0, 1):
             raise ValueError(f"Invalid point value: {point}. Must be 0 or 1.")
 
         points_in_game[point] += 1
+
         game_winner = check_game_update(points_in_game)
 
         if game_winner is not None:
@@ -88,9 +90,11 @@ def calculate_score(points: list[int], config: MatchConfig = MatchConfig()) -> S
             points_in_game = [0, 0]  # Reset points for the next game
 
             set_winner = check_set_update(games_in_set, config)
+
             if set_winner is not None:
                 sets_in_match.append(tuple(games_in_set))
                 games_in_set = [0, 0]  # Reset games for the next set
+
     # TODO : Implement tiebreak logic and match winner logic
     # TODO : Implement logic for final set super tiebreak if config.final_set_super_tiebreak is True
 

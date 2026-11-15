@@ -118,3 +118,8 @@ def test_tiebreak():
     assert s.games == (6, 6)
     assert s.points == (0, 0)
     assert s.in_tiebreak
+
+    raw_points.extend([0, 0, 0, 0, 0, 0])  # 3-3 in tiebreak
+    s = calculate_score(raw_points)
+    assert s.points == (3, 3)
+    assert s.in_tiebreak
